@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petualangan Sudut - Kuis Kelas 3 SD</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg1: #6dd5fa;
+    --bg2: #f7c873;
+    --primary: #ff6b9d;
+    --secondary: #4ecdc4;
+    --accent: #ffd93d;
+    --success: #6bcf7f;
+    --error: #ff6b6b;
+    --text: #2d3436;
+    --card: #ffffff;
+  }
+  body {
+    font-family: 'Comic Sans MS', 'Trebuchet MS', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    min-height: 100vh;
+    color: var(--text);
+    padding: 12px;
+    line-height: 1.5;
+  }
+  .container { max-width: 760px; margin: 0 auto; }
+
+  /* === COVER === */
+  .cover {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    text-align: center;
+    animation: pop 0.6s ease;
+  }
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .cover h1 {
+    font-size: 30px;
+    color: var(--primary);
+    text-shadow: 2px 2px 0 var(--accent);
+    margin-bottom: 8px;
+  }
+  .cover .subtitle { color: #555; font-size: 15px; margin-bottom: 20px; }
+  .cover .emoji { font-size: 56px; margin-bottom: 10px; display: block; }
+  .cover form { display: flex; flex-direction: column; gap: 14px; }
+  .field { text-align: left; }
+  .field label { display: block; font-weight: bold; margin-bottom: 6px; color: #444; font-size: 15px; }
+  .field input, .field select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 3px solid var(--secondary);
+    border-radius: 12px;
+    font-family: inherit;
+    background: #fff;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--primary); }
+  .btn-start {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-family: inherit;
+  }
+  .btn-start:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+
+  /* === HEADER QUIZ === */
+  .quiz-header {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .student-info { font-size: 14px; }
+  .student-info b { color: var(--primary); }
+  .progress-info { font-size: 14px; color: #555; }
+  .score-badge {
+    background: var(--accent);
+    color: #5a4500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary), var(--success));
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* === CARD SOAL === */
+  .question-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 22px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  .q-number {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .q-type-badge {
+    display: inline-block;
+    background: var(--secondary);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .q-text { font-size: 18px; margin-bottom: 18px; color: #333; }
+  .q-text b { color: var(--primary); }
+
+  /* === INPUT STYLES === */
+  .answer-box {
+    background: #f9f9ff;
+    border: 2px dashed var(--secondary);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .answer-box label { display: block; font-weight: bold; margin-bottom: 8px; color: #444; }
+  .answer-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border: 3px solid var(--secondary);
+    border-radius: 12px;
+    text-align: center;
+    font-family: inherit;
+  }
+  .answer-input:focus { outline: none; border-color: var(--primary); }
+  .opt-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 480px) { .opt-grid { grid-template-columns: 1fr; } }
+  .option-btn {
+    background: #fff;
+    border: 3px solid var(--secondary);
+    border-radius: 12px;
+    padding: 14px 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    font-weight: bold;
+    color: #333;
+  }
+  .option-btn:hover { background: #e0fbf9; transform: scale(1.03); }
+  .option-btn.selected {
+    background: var(--secondary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .option-btn.correct { background: var(--success); color: #fff; border-color: var(--success); }
+  .option-btn.wrong { background: var(--error); color: #fff; border-color: var(--error); }
+  .option-btn:disabled { cursor: not-allowed; opacity: 0.85; }
+
+  .tf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .tf-btn {
+    padding: 16px;
+    font-size: 16px;
+    border: 3px solid var(--secondary);
+    background: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    transition: all 0.15s;
+  }
+  .tf-btn:hover { transform: scale(1.03); }
+  .tf-btn.correct { background: var(--success); color: #fff; border-color: var(--success); }
+  .tf-btn.wrong { background: var(--error); color: #fff; border-color: var(--error); }
+  .tf-btn:disabled { cursor: not-allowed; opacity: 0.85; }
+
+  .angle-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+  .angle-chip {
+    padding: 8px 14px;
+    border: 3px solid var(--secondary);
+    background: #fff;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    transition: all 0.15s;
+  }
+  .angle-chip:hover { transform: scale(1.05); }
+  .angle-chip.selected { background: var(--secondary); color: #fff; }
+  .angle-chip.correct { background: var(--success); color: #fff; border-color: var(--success); }
+  .angle-chip.wrong { background: var(--error); color: #fff; border-color: var(--error); }
+  .angle-chip:disabled { cursor: not-allowed; opacity: 0.85; }
+
+  select.answer-input { cursor: pointer; }
+
+  /* === BUTTONS === */
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    border: none;
+    padding: 12px 22px;
+    font-size: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: inherit;
+    transition: transform 0.1s;
+  }
+  .btn:active { transform: translateY(2px); }
+  .btn-check { background: var(--success); color: #fff; }
+  .btn-retry { background: var(--accent); color: #5a4500; }
+  .btn-next { background: var(--primary); color: #fff; }
+  .btn:disabled { background: #ccc; color: #888; cursor: not-allowed; }
+
+  /* === FEEDBACK === */
+  .feedback {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 15px;
+    display: none;
+    animation: pop 0.3s ease;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: #d4f8d4; border-left: 6px solid var(--success); color: #1a5e1a; }
+  .feedback.wrong { background: #ffe0e0; border-left: 6px solid var(--error); color: #8b1a1a; }
+  .feedback .icon { font-size: 22px; margin-right: 6px; }
+  .feedback .hint { margin-top: 6px; font-style: italic; color: #555; font-size: 14px; }
+
+  /* === RESULT === */
+  .result-card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: pop 0.6s ease;
+  }
+  .result-card h2 { color: var(--primary); font-size: 28px; margin-bottom: 10px; }
+  .result-score {
+    font-size: 56px;
+    font-weight: bold;
+    color: var(--secondary);
+    margin: 14px 0;
+    text-shadow: 2px 2px 0 var(--accent);
+  }
+  .result-grade {
+    font-size: 22px;
+    padding: 8px 20px;
+    border-radius: 16px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  .result-msg { font-size: 16px; color: #555; margin-bottom: 18px; }
+  .result-details {
+    text-align: left;
+    background: #f9f9ff;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 18px;
+    max-height: 280px;
+    overflow-y: auto;
+    font-size: 13px;
+  }
+  .result-details .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+  }
+  .result-details .row:last-child { border-bottom: none; }
+  .result-details .row.benar { color: var(--success); }
+  .result-details .row.salah { color: var(--error); }
+
+  .confetti {
+    position: fixed;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes fall {
+    to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+  }
+
+  .story-banner {
+    background: linear-gradient(90deg, #ffe0ec, #fff4d6);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #7a3852;
+    font-weight: bold;
+    border-left: 5px solid var(--primary);
+  }
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============= COVER ============= -->
+  <div id="cover" class="cover">
+    <span class="emoji">📐✨</span>
+    <h1>Petualangan Sudut!</h1>
+    <p class="subtitle">Kuis Matematika Kelas 3 SD yang Seru & Menyenangkan</p>
+    <form id="formIdentitas" autocomplete="off">
+      <div class="field">
+        <label for="nama">👤 Nama Lengkap</label>
+        <input id="nama" type="text" placeholder="Tulis namamu di sini..." required />
+      </div>
+      <div class="field">
+        <label for="kelas">🏫 Kelas</label>
+        <select id="kelas" required>
+          <option value="">Pilih kelas...</option>
+          <option value="3A">3A</option>
+          <option value="3B">3B</option>
+          <option value="3C">3C</option>
+          <option value="3D">3D</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-start">🚀 Mulai Petualangan!</button>
+    </form>
+  </div>
+
+  <!-- ============= QUIZ ============= -->
+  <div id="quiz" class="hide">
+    <div class="quiz-header">
+      <div class="student-info">👤 <b id="sNama">-</b> | 🏫 <span id="sKelas">-</span></div>
+      <div class="score-badge">⭐ Nilai: <span id="curScore">0</span></div>
+      <div class="progress-info">Soal <span id="curIdx">1</span> dari <span id="totalIdx">15</span></div>
+      <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    </div>
+    <div id="qArea"></div>
+    <div class="actions">
+      <button id="btnCheck" class="btn btn-check">✅ Periksa Jawaban</button>
+      <button id="btnRetry" class="btn btn-retry hide">🔄 Coba Sekali Lagi</button>
+      <button id="btnNext" class="btn btn-next hide">➡️ Soal Berikutnya</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+  </div>
+
+  <!-- ============= RESULT ============= -->
+  <div id="result" class="result-card hide">
+    <span style="font-size:56px;">🎉🏆🎉</span>
+    <h2 id="rTitle">Petualangan Selesai!</h2>
+    <div class="result-score" id="rScore">0</div>
+    <div class="result-grade" id="rGrade">-</div>
+    <div class="result-msg" id="rMsg"></div>
+    <div class="result-details" id="rDetails"></div>
+    <button id="btnRestart" class="btn btn-start">🔁 Ulangi Kuis</button>
+  </div>
+
+</div>
+
+<script>
+/* =====================================================================
+   DATA SOAL
+   - type: 'mc' (pilihan ganda), 'tf' (benar/salah), 'input' (ketik angka),
+            'select' (dropdown), 'chip' (pilih derajat dari beberapa pilihan)
+   - Untuk 'input': answers berisi array angka yang benar (tipe jawaban: angka)
+   - points: bobot per soal
+   ===================================================================== */
+const QUESTIONS = [
+  // ---------- 10 SOAL HITUNG ----------
+  {
+    n: 1, type: 'mc', points: 7,
+    text: 'Hitunglah <b>(45 + 15) × 2</b> dan tentukan jenis sudutnya!',
+    options: ['Sudut tumpul (120°)', 'Sudut lancip (60°)', 'Sudut siku-siku (90°)', 'Sudut lurus (180°)'],
+    correct: 0,
+    hint: '(45 + 15) = 60, lalu 60 × 2 = 120. Karena 120 lebih dari 90 dan kurang dari 180, itu sudut tumpul.'
+  },
+  {
+    n: 2, type: 'input', points: 7,
+    text: 'Sebuah sudut besarnya <b>180° − (4 × 20)°</b>. Berapakah besar sudut itu?',
+    placeholder: 'Tulis jawaban dalam angka, contoh: 100',
+    answers: [100],
+    unit: '°',
+    hint: '4 × 20 = 80, lalu 180 − 80 = 100.'
+  },
+  {
+    n: 3, type: 'tf', points: 7,
+    text: 'Jika sebuah sudut adalah <b>(120 : 3) + 50°</b>, apakah sudut tersebut termasuk sudut lancip?',
+    correct: false, // 90°, siku-siku -> BUKAN lancip
+    hint: '(120 : 3) = 40, lalu 40 + 50 = 90°. Sudut 90° itu sudut siku-siku, BUKAN lancip. Jadi jawabannya SALAH.'
+  },
+  {
+    n: 4, type: 'select', points: 7,
+    text: 'Hasil dari <b>200 − (25 × 4)</b> adalah sudut...?',
+    options: ['Lancip (45°)', 'Siku-siku (90°)', 'Tumpul (100°)', 'Lurus (180°)'],
+    correct: 2,
+    hint: '25 × 4 = 100, lalu 200 − 100 = 100°. Karena lebih dari 90 dan kurang dari 180, itu sudut tumpul.'
+  },
+  {
+    n: 5, type: 'input', points: 7,
+    text: 'Budi menggambar sudut sebesar <b>(15 × 6) + (100 : 2)°</b>. Berapakah besar sudut totalnya?',
+    placeholder: 'Tulis jawaban dalam angka',
+    answers: [140],
+    unit: '°',
+    hint: '15 × 6 = 90, lalu 100 : 2 = 50. Total = 90 + 50 = 140°. Itu sudut tumpul.'
+  },
+  {
+    n: 6, type: 'tf', points: 7,
+    text: 'Sebuah jarum jam berputar sebesar <b>(360 − 40) : 2°</b>. Apakah itu sudut tumpul?',
+    correct: true, // 160° -> tumpul
+    hint: '360 − 40 = 320, lalu 320 : 2 = 160°. Karena lebih dari 90 dan kurang dari 180, itu sudut tumpul. Jadi jawabannya BENAR.'
+  },
+  {
+    n: 7, type: 'mc', points: 7,
+    text: 'Tentukan jenis sudut dari hasil operasi berikut: <b>(250 + 50) − (15 × 10) + 20</b>',
+    options: ['Sudut lancip (60°)', 'Sudut siku-siku (90°)', 'Sudut tumpul (170°)', 'Sudut lurus (180°)'],
+    correct: 2,
+    hint: '250 + 50 = 300, lalu 15 × 10 = 150. 300 − 150 + 20 = 170°. Itu sudut tumpul.'
+  },
+  {
+    n: 8, type: 'chip', points: 7,
+    text: 'Dinda memiliki sudut refleks 210°. Ia ingin membaginya menjadi 3 bagian yang sama besar. Pilihlah besar setiap bagian!',
+    chips: [60, 70, 80, 90, 100],
+    correct: 1, // 70
+    hint: '210 : 3 = 70°. Karena 70 kurang dari 90, itu sudut lancip.'
+  },
+  {
+    n: 9, type: 'select', points: 7,
+    text: 'Hasil dari <b>150 + (10 × 5) − (200 : 4)</b> adalah sudut...?',
+    options: ['Lancip (50°)', 'Siku-siku (90°)', 'Tumpul (150°)', 'Lurus (180°)'],
+    correct: 2,
+    hint: '10 × 5 = 50, lalu 200 : 4 = 50. 150 + 50 − 50 = 150°. Itu sudut tumpul.'
+  },
+  {
+    n: 10, type: 'mc', points: 7,
+    text: 'Jika <b>X = (90 + 90)</b> dan <b>Y = (45 × 2)</b>, tentukan jenis sudut dari <b>X − Y</b>!',
+    options: ['Sudut lancip (45°)', 'Sudut siku-siku (90°)', 'Sudut tumpul (135°)', 'Sudut lurus (180°)'],
+    correct: 1,
+    hint: 'X = 180, Y = 90, jadi X − Y = 90°. Itu sudut siku-siku.'
+  },
+
+  // ---------- 5 SOAL CERITA ----------
+  {
+    n: 11, type: 'story', story: '📖 Cerita',
+    points: 6,
+    text: 'Zefanya mengukur sudut kertas yang dilipatnya, ia mengetahui ukurannya adalah 42°. Zefanya kemudian mengalikan angka tersebut dengan 2, lalu membaginya dengan 3, dilanjutkan dengan menambahkan 114, lalu dikurangi 18. Sudut yang diperoleh Zefanya adalah?',
+    placeholder: 'Tulis jawaban dalam angka',
+    answers: [124],
+    unit: '°',
+    hint: '42 × 2 = 84 → 84 : 3 = 28 → 28 + 114 = 142 → 142 − 18 = 124°. Itu sudut tumpul.'
+  },
+  {
+    n: 12, type: 'story', story: '📖 Cerita',
+    points: 6,
+    text: 'Rina melipat kertas membentuk sudut 30°. Lalu Rina mengalikan dengan 3, menambahkan 45, dan terakhir mengurangi 60. Berapakah sudut akhir Rina?',
+    placeholder: 'Tulis jawaban dalam angka',
+    answers: [75],
+    unit: '°',
+    hint: '30 × 3 = 90 → 90 + 45 = 135 → 135 − 60 = 75°. Itu sudut lancip.'
+  },
+  {
+    n: 13, type: 'story', story: '📖 Cerita',
+    points: 6,
+    text: 'Doni bermain kompas. Ia memutar sudut 60°, lalu mengalikannya dengan 2, kemudian mengurangi 30. Berapakah besar sudut akhir Doni?',
+    placeholder: 'Tulis jawaban dalam angka',
+    answers: [90],
+    unit: '°',
+    hint: '60 × 2 = 120 → 120 − 30 = 90°. Itu sudut siku-siku.'
+  },
+  {
+    n: 14, type: 'story', story: '📖 Cerita',
+    points: 6,
+    text: 'Siska punya sudut lurus 180°. Ia membagi sudut itu menjadi 2 bagian sama, lalu menambahkan 90. Berapakah sudut yang diperoleh Siska?',
+    placeholder: 'Tulis jawaban dalam angka',
+    answers: [180],
+    unit: '°',
+    hint: '180 : 2 = 90 → 90 + 90 = 180°. Itu sudut lurus.'
+  },
+  {
+    n: 15, type: 'story', story: '📖 Cerita',
+    points: 6,
+    text: 'Andi memutar jarum jam 90°, lalu menambah 90 lagi, kemudian mengurangi 45. Berapakah besar sudut akhir Andi?',
+    placeholder: 'Tulis jawaban dalam angka',
+    answers: [135],
+    unit: '°',
+    hint: '90 + 90 = 180 → 180 − 45 = 135°. Itu sudut tumpul.'
+  }
+];
+
+/* ====== STATE ====== */
+const state = {
+  idx: 0,
+  score: 0,
+  attempt: 0,     // 0 = percobaan pertama, 1 = ulangan
+  answered: false,
+  details: []     // {n, benar, attempts}
+};
+
+/* ====== ELEMENTS ====== */
+const el = {
+  cover: document.getElementById('cover'),
+  quiz: document.getElementById('quiz'),
+  result: document.getElementById('result'),
+  form: document.getElementById('formIdentitas'),
+  sNama: document.getElementById('sNama'),
+  sKelas: document.getElementById('sKelas'),
+  curScore: document.getElementById('curScore'),
+  curIdx: document.getElementById('curIdx'),
+  totalIdx: document.getElementById('totalIdx'),
+  progressFill: document.getElementById('progressFill'),
+  qArea: document.getElementById('qArea'),
+  btnCheck: document.getElementById('btnCheck'),
+  btnRetry: document.getElementById('btnRetry'),
+  btnNext: document.getElementById('btnNext'),
+  feedback: document.getElementById('feedback'),
+  rScore: document.getElementById('rScore'),
+  rGrade: document.getElementById('rGrade'),
+  rMsg: document.getElementById('rMsg'),
+  rDetails: document.getElementById('rDetails'),
+  btnRestart: document.getElementById('btnRestart')
+};
+
+/* ====== COVER -> QUIZ ====== */
+el.form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const nama = document.getElementById('nama').value.trim();
+  const kelas = document.getElementById('kelas').value;
+  if (!nama || !kelas) return;
+  el.sNama.textContent = nama;
+  el.sKelas.textContent = kelas;
+  el.cover.classList.add('hide');
+  el.quiz.classList.remove('hide');
+  el.totalIdx.textContent = QUESTIONS.length;
+  renderQuestion();
+});
+
+/* ====== RENDER QUESTION ====== */
+function renderQuestion() {
+  const q = QUESTIONS[state.idx];
+  state.attempt = 0;
+  state.answered = false;
+  el.curIdx.textContent = state.idx + 1;
+  el.progressFill.style.width = ((state.idx) / QUESTIONS.length * 100) + '%';
+  el.feedback.className = 'feedback';
+  el.feedback.innerHTML = '';
+  el.btnCheck.classList.remove('hide');
+  el.btnCheck.disabled = false;
+  el.btnRetry.classList.add('hide');
+  el.btnNext.classList.add('hide');
+
+  let typeLabel = '';
+  if (q.type === 'mc') typeLabel = 'Pilihan Ganda';
+  else if (q.type === 'tf') typeLabel = 'Benar / Salah';
+  else if (q.type === 'input') typeLabel = 'Ketik Jawaban';
+  else if (q.type === 'select') typeLabel = 'Pilih dari Daftar';
+  else if (q.type === 'chip') typeLabel = 'Pilih Angka';
+  else if (q.type === 'story') typeLabel = 'Soal Cerita';
+
+  let banner = '';
+  if (q.type === 'story') {
+    banner = `<div class="story-banner">${q.story} — Yuk baca pelan-pelan ya!</div>`;
+  }
+
+  let inputHTML = '';
+  if (q.type === 'mc') {
+    inputHTML = `<div class="opt-grid" id="optGrid">` +
+      q.options.map((o, i) =>
+        `<button type="button" class="option-btn" data-i="${i}">${o}</button>`
+      ).join('') + `</div>`;
+  } else if (q.type === 'tf') {
+    inputHTML = `<div class="tf-grid">
+      <button type="button" class="tf-btn" data-v="true">✅ BENAR</button>
+      <button type="button" class="tf-btn" data-v="false">❌ SALAH</button>
+    </div>`;
+  } else if (q.type === 'input' || q.type === 'story') {
+    inputHTML = `<div class="answer-box">
+      <label>✏️ Tulis jawabanmu (angka saja):</label>
+      <input id="numInput" type="number" class="answer-input" placeholder="${q.placeholder || ''}" autocomplete="off" />
+    </div>`;
+  } else if (q.type === 'select') {
+    inputHTML = `<div class="answer-box">
+      <label>🔽 Pilih jawaban yang benar:</label>
+      <select id="selInput" class="answer-input">
+        <option value="">-- Pilih jawaban --</option>
+        ${q.options.map((o, i) => `<option value="${i}">${o}</option>`).join('')}
+      </select>
+    </div>`;
+  } else if (q.type === 'chip') {
+    inputHTML = `<div class="answer-box">
+      <label>👆 Pilih salah satu angka di bawah:</label>
+      <div class="angle-picker" id="chipGrid">
+        ${q.chips.map((c, i) => `<button type="button" class="angle-chip" data-i="${i}">${c}°</button>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  el.qArea.innerHTML = `
+    <div class="question-card">
+      <span class="q-number">${q.n}</span>
+      <span class="q-type-badge">${typeLabel}</span>
+      <div class="q-text">${banner}${q.text}</div>
+      ${inputHTML}
+    </div>
+  `;
+
+  bindQuestionEvents(q);
+}
+
+/* ====== BIND EVENTS ====== */
+function bindQuestionEvents(q) {
+  if (q.type === 'mc') {
+    const grid = document.getElementById('optGrid');
+    grid.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.answered) return;
+        grid.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+  } else if (q.type === 'tf') {
+    document.querySelectorAll('.tf-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.answered) return;
+        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+  } else if (q.type === 'chip') {
+    const grid = document.getElementById('chipGrid');
+    grid.querySelectorAll('.angle-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.answered) return;
+        grid.querySelectorAll('.angle-chip').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+    });
+  }
+}
+
+/* ====== CHECK ANSWER ====== */
+function getUserAnswer(q) {
+  if (q.type === 'mc') {
+    const sel = document.querySelector('.option-btn.selected');
+    return sel ? parseInt(sel.dataset.i) : null;
+  } else if (q.type === 'tf') {
+    const sel = document.querySelector('.tf-btn.selected');
+    if (!sel) return null;
+    return sel.dataset.v === 'true';
+  } else if (q.type === 'input' || q.type === 'story') {
+    const v = document.getElementById('numInput').value.trim();
+    if (v === '') return null;
+    return parseFloat(v);
+  } else if (q.type === 'select') {
+    const sel = document.getElementById('selInput');
+    return sel.value === '' ? null : parseInt(sel.value);
+  } else if (q.type === 'chip') {
+    const sel = document.querySelector('.angle-chip.selected');
+    return sel ? parseInt(sel.dataset.i) : null;
+  }
+  return null;
+}
+
+function isCorrect(q, ans) {
+  if (ans === null) return false;
+  if (q.type === 'mc' || q.type === 'select' || q.type === 'chip') {
+    return ans === q.correct;
+  } else if (q.type === 'tf') {
+    return ans === q.correct;
+  } else if (q.type === 'input' || q.type === 'story') {
+    return q.answers.some(a => Math.abs(a - ans) < 0.001);
+  }
+  return false;
+}
+
+function markVisual(q, correct) {
+  if (q.type === 'mc') {
+    document.querySelectorAll('.option-btn').forEach(b => {
+      b.disabled = true;
+      const i = parseInt(b.dataset.i);
+      if (i === q.correct) b.classList.add('correct');
+      else if (b.classList.contains('selected') && !correct) b.classList.add('wrong');
+    });
+  } else if (q.type === 'tf') {
+    document.querySelectorAll('.tf-btn').forEach(b => {
+      b.disabled = true;
+      const v = b.dataset.v === 'true';
+      if (v === q.correct) b.classList.add('correct');
+      else if (b.classList.contains('selected') && !correct) b.classList.add('wrong');
+    });
+  } else if (q.type === 'chip') {
+    document.querySelectorAll('.angle-chip').forEach(b => {
+      b.disabled = true;
+      const i = parseInt(b.dataset.i);
+      if (i === q.correct) b.classList.add('correct');
+      else if (b.classList.contains('selected') && !correct) b.classList.add('wrong');
+    });
+  } else if (q.type === 'select') {
+    const sel = document.getElementById('selInput');
+    sel.disabled = true;
+  }
+}
+
+function disableInput(q) {
+  if (q.type === 'input' || q.type === 'story') {
+    const inp = document.getElementById('numInput');
+    if (inp) inp.disabled = true;
+  }
+}
+
+/* ====== BUTTONS ====== */
+el.btnCheck.addEventListener('click', () => {
+  const q = QUESTIONS[state.idx];
+  const ans = getUserAnswer(q);
+
+  if (ans === null) {
+    el.feedback.className = 'feedback wrong show';
+    el.feedback.innerHTML = '<span class="icon">🤔</span> Eh, kamu belum menjawab! Yuk pilih/tulis jawabanmu dulu.';
+    return;
+  }
+
+  const correct = isCorrect(q, ans);
+  state.answered = true;
+  disableInput(q);
+  markVisual(q, correct);
+  el.btnCheck.disabled = true;
+
+  if (correct) {
+    let gained = q.points;
+    if (state.attempt === 1) gained = Math.max(0, q.points - 2);
+    state.score += gained;
+    el.curScore.textContent = state.score;
+    el.feedback.className = 'feedback correct show';
+    el.feedback.innerHTML = getPositiveFeedback(gained, q.hint);
+    state.details.push({ n: q.n, benar: true, attempts: state.attempt + 1, gained });
+    el.btnNext.classList.remove('hide');
+    if (state.idx === QUESTIONS.length - 1) el.btnNext.textContent = '🎉 Lihat Hasil';
+    else el.btnNext.textContent = '➡️ Soal Berikutnya';
+    fireConfetti();
+  } else {
+    el.feedback.className = 'feedback wrong show';
+    if (state.attempt === 0) {
+      el.feedback.innerHTML = getRetryFeedback(q.hint);
+      state.attempt = 1;
+      el.btnRetry.classList.remove('hide');
+    } else {
+      el.feedback.innerHTML = getFinalWrongFeedback(q.hint);
+      state.details.push({ n: q.n, benar: false, attempts: 2, gained: 0 });
+      el.btnNext.classList.remove('hide');
+      if (state.idx === QUESTIONS.length - 1) el.btnNext.textContent = '🎉 Lihat Hasil';
+      else el.btnNext.textContent = '➡️ Soal Berikutnya';
+    }
+  }
+});
+
+el.btnRetry.addEventListener('click', () => {
+  const q = QUESTIONS[state.idx];
+  state.answered = false;
+  state.attempt = 1;
+  el.feedback.className = 'feedback';
+  el.feedback.innerHTML = '';
+  el.btnCheck.disabled = false;
+  el.btnRetry.classList.add('hide');
+  el.btnNext.classList.add('hide');
+
+  // Reset visual + input
+  if (q.type === 'mc' || q.type === 'tf' || q.type === 'chip') {
+    const selector = q.type === 'mc' ? '.option-btn' : (q.type === 'tf' ? '.tf-btn' : '.angle-chip');
+    document.querySelectorAll(selector).forEach(b => {
+      b.disabled = false;
+      b.classList.remove('selected', 'correct', 'wrong');
+    });
+  } else if (q.type === 'input' || q.type === 'story') {
+    const inp = document.getElementById('numInput');
+    inp.disabled = false;
+    inp.value = '';
+    inp.focus();
+  } else if (q.type === 'select') {
+    const sel = document.getElementById('selInput');
+    sel.disabled = false;
+    sel.value = '';
+  }
+});
+
+el.btnNext.addEventListener('click', () => {
+  if (state.idx < QUESTIONS.length - 1) {
+    state.idx++;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showResult();
+  }
+});
+
+el.btnRestart.addEventListener('click', () => {
+  state.idx = 0;
+  state.score = 0;
+  state.attempt = 0;
+  state.answered = false;
+  state.details = [];
+  el.curScore.textContent = '0';
+  el.quiz.classList.add('hide');
+  el.result.classList.add('hide');
+  el.cover.classList.remove('hide');
+  document.getElementById('nama').value = '';
+  document.getElementById('kelas').value = '';
+});
+
+/* ====== FEEDBACK MESSAGES ====== */
+function getPositiveFeedback(gained, hint) {
+  const praise = [
+    'Hebat sekali! 🌟', 'Pintar banget! 🎉', 'Mantap! 👏', 'Keren! 🏆',
+    'Jenius! 🤩', 'Luar biasa! 💯', 'Tepat sekali! ✨'
+  ];
+  const p = praise[Math.floor(Math.random() * praise.length)];
+  let note = gained > 0 ? `+${gained} poin` : 'Benar!';
+  let retryNote = state.attempt === 1 ? ' (kamu tadi mengulang, jadi dikurangi 2 ya)' : '';
+  return `<span class="icon">✅</span><b>${p}</b> ${note}${retryNote}.
+    <div class="hint">💡 ${hint}</div>`;
+}
+
+function getRetryFeedback(hint) {
+  const cheers = [
+    'Yuk dicoba lagi! 💪', 'Hampir benar! Coba sekali lagi. 😊',
+    'Jangan menyerah, coba lagi ya! 🌈'
+  ];
+  const c = cheers[Math.floor(Math.random() * cheers.length)];
+  return `<span class="icon">❌</span><b>Belum tepat.</b> ${c}
+    <div class="hint">💡 <b>Petunjuk:</b> ${hint}</div>
+    <div class="hint">⚠️ Kamu punya 1 kali kesempatan mengulang. Kalau benar, nilainya dikurangi 2 ya.</div>`;
+}
+
+function getFinalWrongFeedback(hint) {
+  return `<span class="icon">📚</span><b>Belum berhasil kali ini.</b> Tidak apa-apa, yang penting sudah berusaha!
+    <div class="hint">💡 <b>Pembahasan:</b> ${hint}</div>
+    <div class="hint">Yuk lanjut ke soal berikutnya! 🚀</div>`;
+}
+
+/* ====== RESULT ====== */
+function showResult() {
+  el.quiz.classList.add('hide');
+  el.result.classList.remove('hide');
+  el.progressFill.style.width = '100%';
+  el.rScore.textContent = state.score;
+
+  let grade, msg, color;
+  const s = state.score;
+  if (s >= 90) { grade = 'A — Sempurna!'; color = '#6bcf7f'; msg = 'Wah, kamu jago sekali mengenali sudut! Pertahankan ya! 🌟'; fireConfetti(40); }
+  else if (s >= 75) { grade = 'B — Bagus!'; color = '#4ecdc4'; msg = 'Kerja yang bagus! Sedikit lagi untuk sempurna! 💪'; fireConfetti(25); }
+  else if (s >= 60) { grade = 'C — Cukup'; color = '#ffd93d'; msg = 'Lumayan! Yuk belajar lagi biar makin jago. 📚'; }
+  else { grade = 'D — Tetap Semangat!'; color = '#ff6b6b'; msg = 'Jangan menyerah ya! Belajar lagi bareng guru dan teman. 💖'; }
+
+  el.rGrade.textContent = grade;
+  el.rGrade.style.background = color;
+  el.rGrade.style.color = '#fff';
+  el.rMsg.textContent = msg;
+
+  let rows = '';
+  state.details.forEach(d => {
+    const status = d.benar ? '✅ Benar' : '❌ Salah';
+    const cls = d.benar ? 'benar' : 'salah';
+    const att = d.attempts === 1 ? '(langsung)' : `(ulang 1x)`;
+    rows += `<div class="row ${cls}"><span>Soal ${d.n}</span><span>${status} ${att} • +${d.gained} poin</span></div>`;
+  });
+  el.rDetails.innerHTML = rows + `<div class="row"><b>Total</b><b>${state.score} / 100</b></div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ====== CONFETTI ====== */
+function fireConfetti(count = 25) {
+  const colors = ['#ff6b9d', '#4ecdc4', '#ffd93d', '#6bcf7f', '#a78bfa', '#ff8c42'];
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.animation = `fall ${1.5 + Math.random() * 1.5}s linear forwards`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+</script>
+</body>
+</html>
